@@ -16,7 +16,7 @@ commands:
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS = 1
@@ -76,9 +76,9 @@ jobs:
             cd backend
             npm install
             npm run build
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build   
+      # - save_cache:
+      #     paths: [frontend/node_modules]
+      #     key: frontend-build   
                 
   test-backend:
     docker:
