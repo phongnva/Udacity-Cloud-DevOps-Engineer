@@ -201,15 +201,21 @@ jobs:
                     
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
+      - image: python:3.11-rc-alpine
     steps:
-      # Checkout code from git
-      # Add ssh keys with fingerprint
-      # attach workspace
+      - checkout
+      - restore_cache:
+          keys: [backend-build]  
+      - add_ssh_keys:
+          fingerprints: ["cf:37:5a:2a:e6:b4:a6:b0:18:4f:08:13:fb:dc:12:c3:8e:bc:ec:18"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
             # your code here
+            apk add --update ansible 
+            apk add --update nodejs npm
       - run:
           name: Deploy backend
           command: |
