@@ -41,8 +41,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm run test
-            exit 1
+            npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -55,10 +54,11 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Back-end build
+          name: Build Back-end
           command: |
-             # Your code here
-             exit 1
+            cd backend
+            npm install
+            npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -66,20 +66,20 @@ jobs:
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
-    steps:  
+    steps:
       - checkout
       - restore_cache:
-        keys: [frontend-build]
+          keys: [frontend-build]
       - run:
-        name: Run frontend test
-        command: |
-            cd backend
+          name: Run front-end test
+          command: |
+            cd frontend
             npm install
-            npm run build
+            npm run test
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build   
-                
+          key: frontend-build            
+               
   test-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -96,7 +96,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-            
+
   scan-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -135,7 +135,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-
+          
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
