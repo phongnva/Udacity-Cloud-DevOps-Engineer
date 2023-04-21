@@ -22,8 +22,8 @@ commands:
             SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
+             cd ~/project/backend
+             npm install
             #  Add revert code here. You can find this in the Getting Started section.
               exit 1
             fi
@@ -63,22 +63,22 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
-  # test-frontend:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #       keys: [frontend-build]
-  #     - run:
-  #       name: Run frontend test
-  #       command: |
-  #           cd backend
-  #           npm install
-  #           npm run build
-      # - save_cache:
-      #     paths: [frontend/node_modules]
-      #     key: frontend-build   
+  test-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:  
+      - checkout
+      - restore_cache:
+        keys: [frontend-build]
+      - run:
+        name: Run frontend test
+        command: |
+            cd backend
+            npm install
+            npm run build
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build   
                 
   test-backend:
     docker:
