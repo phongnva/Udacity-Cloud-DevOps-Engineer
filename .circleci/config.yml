@@ -350,7 +350,8 @@ workflows:
       - scan-frontend:
           requires: [build-frontend]
       - deploy-infrastructure
-      - deploy-infrastructure:
+      - configure-infrastructure
+      # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
