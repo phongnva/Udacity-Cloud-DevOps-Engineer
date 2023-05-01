@@ -3,6 +3,9 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class FixProductIdTable1549398619849 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(
+      `CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "order_products_product" DROP CONSTRAINT "FK_d6c66c08b9c7e84a1b657797dff"`,
     );
     await queryRunner.query(
