@@ -217,7 +217,6 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration status to kvdb.io
@@ -225,7 +224,8 @@ jobs:
             cd backend
             if grep -q "has been executed successfully."  migrations_dump.txt
             then
-              curl --insecure https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              # curl --insecure https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              echo "Run migrations successfully!"
             fi
 
   deploy-frontend:
