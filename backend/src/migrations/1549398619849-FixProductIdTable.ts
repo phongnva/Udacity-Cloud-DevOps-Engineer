@@ -10,7 +10,7 @@ export class FixProductIdTable1549398619849 implements MigrationInterface {
     );
     await queryRunner.query(`ALTER TABLE "product" DROP COLUMN "id"`);
     await queryRunner.query(
-      `ALTER TABLE "product" ADD "id" uuid NOT NULL DEFAULT uuid_generate_v5()`,
+      `ALTER TABLE "product" ADD "id" uuid NOT NULL DEFAULT uuid_generate_v4()`,
     );
     await queryRunner.query(
       `ALTER TABLE "product" ADD CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY ("id")`,
