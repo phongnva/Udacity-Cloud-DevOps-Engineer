@@ -233,36 +233,36 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
-          name: Install dependencies
+          name: Install tar utility
           command: |
-            sudo apt-get update
-            sudo apt-get install python python-pip
+            sudo apt-get update && sudo apt-get install python python-pip
+      - run:
+          name: Install ansible and awscli
+          command: |
             pip install ansible 
             pip install awscli
       - run:
           name: Get backend url
           command: |
-            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export BACKEND_IP=$(aws --region us-east-1 ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].[PublicIpAddress]' --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
-          name: Deploy frontend objects
+          name: Deploy frontend
           command: |
-            echo "--------cd frontend--------"
             cd frontend
-            pwd
-            echo "--------npm install--------"
             npm install
-            echo "--------npm run build--------"
             npm run build
-            echo "--------tar dist--------"
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            ls -la
-            echo "--------cp dist to s3--------"
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive 
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
                     
   deploy-backend:
     docker:
