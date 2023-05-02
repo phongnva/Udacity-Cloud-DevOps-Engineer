@@ -237,9 +237,9 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install python python3-pip
-            pip install ansible 
-            pip install awscli
+            # sudo apt-get install python python-pip
+            # pip install ansible 
+            # pip install awscli
       - run:
           name: Get backend url
           command: |
@@ -361,7 +361,7 @@ workflows:
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
-          requires: [configure-infrastructure, run-migrations]
+          requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
