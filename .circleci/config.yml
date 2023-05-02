@@ -324,6 +324,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: Echo Inventory
+          command: |
+            cat ~/inventory.txt
+      - run:
           name: Backend smoke test.
           command: |
             export BACKEND_IP=$(cat ~/inventory.txt)
