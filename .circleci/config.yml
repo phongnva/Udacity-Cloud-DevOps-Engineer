@@ -18,17 +18,18 @@ commands:
     description: Revert the last migration if successfully run in the current workflow.   
     steps:
       - run:
-          name: Revert migrations
-          when: on_fail
-          command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-            then
-              cd ~/project/backend
-              npm install
-              #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
-            fi 
+        name: Revert migrations
+        when: on_fail
+        command: |
+          # Your Memstash or kvdb.io GET URL code goes here
+          SUCCESS=$(curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_<< parameters.workflow_id >>)
+          # Logic for reverting the database state
+          if (( $SUCCESS == 1 ));
+          then
+            cd ~/project/backend
+            npm install
+            npm run migration:revert
+          fi 
             
 jobs:
   build-frontend:
@@ -224,8 +225,7 @@ jobs:
             cd backend
             if grep -q "has been executed successfully."  migrations_dump.txt
             then
-              # curl --insecure https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-              echo "Run migrations successfully!"
+              curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
 
   deploy-frontend:
@@ -271,9 +271,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install ansible
-            pip install awscli
-            apt update && apt install nodejs npm tar gzip -y
+            apk add --update ansible 
+            apk add --update nodejs npm
       - run:
           name: Add ENV
           command: |
@@ -313,9 +312,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install ansible
-            pip install awscli
-            apt update && apt install nodejs npm tar gzip -y
+            apt install npm tar gzip curl -y
       - attach_workspace:
           at: ~/
       - run:
