@@ -15,24 +15,24 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
   revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.   
+    description: Revert the last migration if successfully run in the current workflow.
     parameters:
       workflow_id:
-          type: string 
+          type: string     
     steps:
       - run:
-        name: Revert migrations
-        when: on_fail
-        command: |
-          # Your Memstash or kvdb.io GET URL code goes here
-          SUCCESS=$(curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_<< parameters.workflow_id >>)
-          # Logic for reverting the database state
-          if (( $SUCCESS == 1 ));
-          then
-            cd ~/project/backend
-            npm install
-            npm run migration:revert
-          fi 
+          name: Revert migrations
+          when: on_fail
+          # Add when this will run
+          command: |
+            SUCCESS=$(curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_<< parameters.workflow_id >>)
+            # Logic for reverting the database state
+            if (( "$SUCCESS" == "1" ));
+            then
+                cd ~/project/backend
+                npm install
+                npm run migrations:revert
+            fi
             
 jobs:
   build-frontend:
@@ -343,7 +343,7 @@ jobs:
               exit 1
             fi
       - destroy-environment
-      # - revert-migrations
+      - revert-migrations
 
   cloudfront-update:
     docker:
