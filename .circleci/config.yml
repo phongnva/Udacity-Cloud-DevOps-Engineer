@@ -207,8 +207,8 @@ jobs:
             ls -la
             cat ~/inventory.txt
             ansible-playbook -i ~/inventory.txt configure-server.yml
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - destroy-environment:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   run-migrations:
     docker:
@@ -269,7 +269,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]  
       - add_ssh_keys:
-          fingerprints: ["cf:37:5a:2a:e6:b4:a6:b0:18:4f:08:13:fb:dc:12:c3:8e:bc:ec:18"]
+          fingerprints: ["67:5a:f5:ab:bb:ea:f6:64:8b:22:39:2f:79:95:c5:bd"]
       - attach_workspace:
           at: ~/
       - run:
