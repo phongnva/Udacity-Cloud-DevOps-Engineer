@@ -172,7 +172,8 @@ jobs:
             touch inventory.txt
             echo [web] > inventory.txt
             aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
               --output text >> inventory.txt
             pwd
             ls -la
@@ -186,7 +187,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.11-rc-alpine
+      - image: python
     steps:
       - checkout
       - add_ssh_keys:
