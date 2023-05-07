@@ -42,4 +42,4 @@
     cd /home/ubuntu/backend/
     npm install
     pm2 stop default
-    sudo pm2 start npm -- start
+    pm2 start npm -- start
