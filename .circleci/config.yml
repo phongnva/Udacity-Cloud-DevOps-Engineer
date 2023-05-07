@@ -246,7 +246,7 @@ jobs:
           name: Install dependencies
           command: |
             # sudo apt-get update
-            sudo apt-get update && sudo apt-get install python python-pip
+            sudo apt-get install python python-pip
             pip install ansible 
             pip install awscli
       - run:
@@ -305,7 +305,7 @@ jobs:
           command: |
             # your code here
             cd backend
-            # npm install typescript -g
+            npm install typescript -g
             npm i
             npm run build
             cd ..
