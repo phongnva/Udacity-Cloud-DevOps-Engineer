@@ -246,10 +246,9 @@ jobs:
           name: Install dependencies
           command: |
             # sudo apt-get update
-            sudo apt-get install python python-pip
+            sudo apt-get update && sudo apt-get install python python-pip
             pip install ansible 
             pip install awscli
-            # sudo npm install typescript -g
       - run:
           name: Get backend url
           command: |
@@ -290,24 +289,23 @@ jobs:
           name: Add ENV
           command: |
             echo "NODE_ENV=$NODE_ENV" >> backend/.env
-            echo "VERSION=$VERSION" >> backend/.env
+            echo "VERSION=1" >> backend/.env
             echo "TYPEORM_CONNECTION=$TYPEORM_CONNECTION" >> backend/.env
             echo "TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR" >> backend/.env
             echo "TYPEORM_ENTITIES=$TYPEORM_ENTITIES" >> backend/.env
             echo "TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS" >> backend/.env
             echo "TYPEORM_HOST=$TYPEORM_HOST" >> backend/.env
-            echo "TYPEORM_PORT=$TYPEORM_PORT" >> backend/.env
+            echo "TYPEORM_PORT=5432" >> backend/.env
             echo "TYPEORM_USERNAME=$TYPEORM_USERNAME" >> backend/.env
             echo "TYPEORM_PASSWORD=$TYPEORM_PASSWORD" >> backend/.env
             echo "TYPEORM_DATABASE=$TYPEORM_DATABASE" >> backend/.env
-            echo "--------cat .env--------"
             cat backend/.env
       - run:
           name: Deploy backend
           command: |
             # your code here
             cd backend
-            npm install typescript -g
+            # npm install typescript -g
             npm i
             npm run build
             cd ..
