@@ -414,10 +414,9 @@ jobs:
       - run:
           name: Remove old stacks and files  
           command: |
-            cat OldWorkflowID.txt
-            OldWorkflowID=$(cat OldWorkflowID.txt)
             echo OldWorkflowID: "${OldWorkflowID}"
             echo $OldWorkflowID
+            echo $STACKS
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               echo "Delete Confirmed"
@@ -444,10 +443,10 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          # filters:
-          #   branches:
-          #     only: 
-          #       - main
+          filters:
+            branches:
+              only: 
+                - main
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
