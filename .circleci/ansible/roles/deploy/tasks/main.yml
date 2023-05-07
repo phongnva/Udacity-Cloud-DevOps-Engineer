@@ -40,6 +40,7 @@
   become: true
   shell: |
     cd /home/ubuntu/backend/
+    sudo npm i ts-node typescript
     sudo npm install
     sudo pm2 stop default
     sudo pm2 start npm -- start
