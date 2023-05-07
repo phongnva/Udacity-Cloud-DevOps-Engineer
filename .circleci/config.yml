@@ -262,9 +262,8 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            sudo npm install typescript -g
-            sudo npm install
-            sudo npm run build
+            npm install
+            npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
@@ -307,7 +306,6 @@ jobs:
           command: |
             # your code here
             cd backend
-            npm install typescript -g
             npm i
             npm run build
             cd ..
