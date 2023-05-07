@@ -307,7 +307,7 @@ jobs:
           command: |
             # your code here
             cd backend
-            sudo npm install typescript -g
+            npm install typescript -g
             npm i
             npm run build
             cd ..
