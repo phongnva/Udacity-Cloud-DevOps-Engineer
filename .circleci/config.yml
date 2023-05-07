@@ -391,19 +391,30 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
       - run:
-          name: Get old stack workflow id
+          name: Install dependencies
           command: |
-            # your code here
-            export OldWorkflowID="the id here"
-            export STACKS=[] #put the list of stacks here
+            yum install tar gzip -y
+      - attach_workspace:
+          at: ~/
       - run:
-          name: Remove old stacks and files
+          name: Clean OldWorkflow
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            cat ~/OldWorkflowID.txt
+            OldWorkflowID=$(cat ~/OldWorkflowID.txt)
+            echo OldWorkflowID: $OldWorkflowID
+            echo $OldWorkflowID
+            OldID=${OldWorkflowID:10:7}
+            CIRCLE_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
+            echo CIRCLE_WORKFLOW_ID: $CIRCLE_WORKFLOW_ID
+            if [[ "$OldID" != "$CIRCLE_WORKFLOW_ID" ]]
             then
-              # your code here
+              echo "Delete confirmed"
+              aws s3 rb "s3://udapeople-$OldID" --force
+              aws cloudformation delete-stack --stack-name "udapeople-backend-$OldID"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-$OldID"
+            else
+              echo "Cannot cleanup resource"
             fi
             
 
