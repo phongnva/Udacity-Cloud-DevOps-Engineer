@@ -419,7 +419,7 @@ jobs:
             cat ~/OldWorkflowID.txt
             OldWorkflowID=$(cat ~/OldWorkflowID.txt)
             echo OldWorkflowID: "${OldWorkflowID}"
-            CIRCLE_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
+            echo CIRCLE_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
             echo ${OldWorkflowID: -7}
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID: -7}" ]]
             then
