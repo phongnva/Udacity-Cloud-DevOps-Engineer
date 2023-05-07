@@ -338,10 +338,11 @@ jobs:
           name: Echo Inventory
           command: |
             cat .circleci/ansible/inventory.txt
-      - name: "Wait 10 seconds for target connection to become reachable/usable."
-        # Your code here
-        wait_for_connection:
-          timeout: 10
+      - run:
+          name: "Wait 10 seconds for target connection to become reachable/usable."
+          # Your code here
+          wait_for_connection:
+            timeout: 10
       - run:
           name: Backend smoke test.
           command: |
