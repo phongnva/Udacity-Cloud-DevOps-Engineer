@@ -246,9 +246,10 @@ jobs:
           name: Install dependencies
           command: |
             # sudo apt-get update
-            sudo apt-get install python python-pip
-            pip install ansible 
-            pip install awscli
+            sudo pip install ansible 
+            sudo pip install awscli
+            sudo npm install
+            sudo npm install typescript -g
 
       - run:
           name: Get backend url
@@ -262,8 +263,8 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            npm install
-            npm run build
+            sudo npm install
+            sudo npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
