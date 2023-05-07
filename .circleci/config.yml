@@ -339,11 +339,6 @@ jobs:
           command: |
             cat .circleci/ansible/inventory.txt
       - run:
-          name: "Wait 10 seconds for target connection to become reachable/usable."
-          # Your code here
-          wait_for_connection:
-            timeout: 10
-      - run:
           name: Backend smoke test.
           command: |
             # Fetch and prepare the BACKEND_IP env var
