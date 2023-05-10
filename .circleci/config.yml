@@ -233,7 +233,7 @@ jobs:
           command: |
             cd backend
             cat ~/project/backend/migrations_dump.txt
-            if grep -q "has been executed successfully."  ~/project/backend/migrations_dump.txt
+            if grep -q "No migrations are pending"  ~/project/backend/migrations_dump.txt
             then
               curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
@@ -457,13 +457,13 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
