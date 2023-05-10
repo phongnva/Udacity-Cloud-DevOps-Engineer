@@ -30,7 +30,7 @@ Resources:
           ForwardedValues:
             QueryString: False
           TargetOriginId: webpage
-          ViewerProtocolPolicy: allow-all
+          ViewerProtocolPolicy: allow-all 
 
 Outputs:
   WorkflowID:
