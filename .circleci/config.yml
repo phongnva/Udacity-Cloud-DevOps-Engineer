@@ -239,7 +239,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:20.1.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
@@ -446,10 +446,10 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: 
-                - main
+          # filters:
+          #   branches:
+          #     only: 
+          #       - main
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
