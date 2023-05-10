@@ -30,7 +30,7 @@ commands:
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_<< parameters.workflow_id >>)
             # Logic for reverting the database state
-            if (( "$SUCCESS" == "1" )); 				if (( $SUCCESS == 1 ));
+            if (( $SUCCESS == 1 ));
             then
                 cd ~/project/backend
                 npm install
@@ -228,7 +228,6 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
-            cat migrations_dump.txt
       - run:
           name: Send migration status to kvdb.io
           command: |
@@ -341,6 +340,7 @@ jobs:
           name: Echo Inventory
           command: |
             cat .circleci/ansible/inventory.txt
+            curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Backend smoke test.
           command: |
