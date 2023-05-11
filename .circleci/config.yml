@@ -30,7 +30,7 @@ commands:
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_<< parameters.workflow_id >>)
             # Logic for reverting the database state
-            if (( "$SUCCESS" == "1" ));
+            if (( $SUCCESS == 1 ));
             then
                 cd ~/project/backend
                 npm install
@@ -232,9 +232,10 @@ jobs:
           name: Send migration status to kvdb.io
           command: |
             cd backend
-            if grep -q "has been executed successfully."  migrations_dump.txt
+            cat ~/project/backend/migrations_dump.txt
+            if grep -q "No migrations are pending"  ~/project/backend/migrations_dump.txt
             then
-              curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
 
   deploy-frontend:
@@ -327,19 +328,22 @@ jobs:
 
   smoke-test:
     docker:
-      - image: amazon/aws-cli
+      - image: python
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            yum -y install tar gzip curl
+            pip install ansible
+            pip install awscli
+            apt update && apt install nodejs npm tar gzip -y
       - attach_workspace:
           at: ~/
       - run:
           name: Echo Inventory
           command: |
             cat .circleci/ansible/inventory.txt
+            curl --insecure  https://kvdb.io/Kuo6hWBpxRFDaP1EHDp6pY/migration_${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Backend smoke test.
           command: |
@@ -360,7 +364,6 @@ jobs:
             echo $URL
             if curl -s $URL | grep "Welcome"
             then
-                # Change this to 0 after the job fails
               exit 0
             else
               exit 1
