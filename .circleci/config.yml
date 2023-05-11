@@ -328,13 +328,15 @@ jobs:
 
   smoke-test:
     docker:
-      - image: amazon/aws-cli
+      - image: python
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            yum -y install tar gzip curl
+            pip install ansible
+            pip install awscli
+            apt update && apt install nodejs npm tar gzip -y
       - attach_workspace:
           at: ~/
       - run:
